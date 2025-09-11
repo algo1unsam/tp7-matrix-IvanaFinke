@@ -17,10 +17,10 @@ object morfeo
 object trinity
 {
     var property peso = 900 
-    var property dedoMeñiqueBoca = true
+    var property dedoMeniqueBoca = true
     var property pulgarOido = true
- //Hace una llamada si el usuario tiene suficiente dinero
-    method llamar() = dedoMeñiqueBoca and pulgarOido
+ //Hace una llamada 
+    method llamar() = dedoMeniqueBoca and pulgarOido
 }
 
 //Mensajero Neo:
@@ -29,11 +29,17 @@ object neo
     var property peso = 0 
     //saldo en el celular:
     var property cantidadSaldo = 0
+    var property transporte = vuelo 
 
     method llamar() = cantidadSaldo > 0
 }
 
 //Medios de transporte:
+object vuelo {
+    var property volar = "Volar" 
+  
+}
+
 object camion
 {
     var property pesoBasePorAcoplado = 500
@@ -50,9 +56,9 @@ object monopatin
 //Destinos:
 object puente
 {
-    method dejarPasar(transporte)
+    method dejarPasar(usuario)
     {
-        return transporte.peso() <= 1000
+        return usuario.peso() <= 1000
     }
 }
 
@@ -62,7 +68,7 @@ object  matrix
 
     const property listaEmpleados = []
 
-    method dejarPasar(valor) {llamada = valor return llamada}  
+    method dejarPasar(usuario) = usuario.llamar(true) 
 
     method contratarUnEmpleado(empleado) = listaEmpleados.add(empleado)
 
@@ -72,6 +78,19 @@ object  matrix
 
 //Si la mensajeria tiene mas de dos empleados
     method mensajeriaEsGrande() = listaEmpleados.size() > 2
+
+//Consulta si el paquete fue entregado por el primer empleado
+    method retornaPrimerEmpleado()
+    {
+        var primerEmpleado = listaEmpleados.get(0)
+        return primerEmpleado
+    }
+
+    method paqueteEntregadoPrimerEmpleado()
+    {
+        return paquete.puedeSerEntregadoPor(self.retornaPrimerEmpleado())
+    }
+    
     
 }
 
@@ -102,7 +121,7 @@ object paquete
 //Metodo para ver por quien puede ser entregado
     method puedeSerEntregadoPor(usuario)
     {
-        return pagado and (destino.dejarPasar(usuario.transporte()))
+        return pagado and (destino.dejarPasar(usuario))
     }
 }
 
