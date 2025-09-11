@@ -60,7 +60,19 @@ object  matrix
 {
     var llamada = false
 
+    const property listaEmpleados = []
+
     method dejarPasar(valor) {llamada = valor return llamada}  
+
+    method contratarUnEmpleado(empleado) = listaEmpleados.add(empleado)
+
+    method despedirUnEmpleado(empleado) = listaEmpleados.remove(empleado)
+
+    method despedirATodos() = listaEmpleados.forEach({empleado => listaEmpleados.remove(empleado)})
+
+//Si la mensajeria tiene mas de dos empleados
+    method mensajeriaEsGrande() = listaEmpleados.size() > 2
+    
 }
 
 //Paquete:

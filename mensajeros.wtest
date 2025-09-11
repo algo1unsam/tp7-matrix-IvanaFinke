@@ -99,6 +99,50 @@ describe "Test de mensajeros primera parte " {
 		paquete.estaPago(neo)
 		assert.notThat(paquete.puedeSerEntregadoPor(neo))
 	}
+
+	//LISTO
+	test "Contratar a trinity"{
+		matrix.contratarUnEmpleado(trinity)
+		assert.equals([trinity], matrix.listaEmpleados())
+	}
+
+	//LISTO
+	test "Contratar a neo"{
+		matrix.contratarUnEmpleado(neo)
+		assert.equals([neo], matrix.listaEmpleados())
+	}
+
+	//LISTO
+	test "Contratar a todos"{
+		matrix.contratarUnEmpleado(trinity)
+		matrix.contratarUnEmpleado(neo)
+		matrix.contratarUnEmpleado(morfeo)
+		assert.equals([trinity,neo,morfeo], matrix.listaEmpleados())
+	}
+
+	//LISTO
+	test "Despedir a un mensajero"{
+		matrix.contratarUnEmpleado(trinity)
+		matrix.despedirUnEmpleado(trinity)
+		assert.equals([], matrix.listaEmpleados())
+	}
+
+	//LISTO
+	test "Despedir a todos"{
+		matrix.contratarUnEmpleado(trinity)
+		matrix.contratarUnEmpleado(neo)
+		matrix.contratarUnEmpleado(morfeo)
+		matrix.despedirATodos()
+		assert.equals([], matrix.listaEmpleados())
+	}
+
+	//LISTO
+	test "Mensajeria es grande si tiene mas de dos empleados"{
+		matrix.contratarUnEmpleado(trinity)
+		matrix.contratarUnEmpleado(neo)
+		matrix.contratarUnEmpleado(morfeo)
+		assert.that(matrix.mensajeriaEsGrande())
+	}
 }
 
 
