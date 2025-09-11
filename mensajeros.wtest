@@ -62,23 +62,44 @@ describe "Test de mensajeros primera parte " {
 	    assert.that(paquete.estaPago(morfeo))
     }
 
+	//LISTO
     test "un paquete pago con destino a Alsina puede ser entregado por Morfeo en camion liviano"{
-		paquete.pagar()
+		morfeo.cantidadDinero(100)
+		paquete.pagar(true)
+		camion.acoplados(1)
+		morfeo.transporte(camion)
 		paquete.destino(puente)
 	    assert.that(paquete.puedeSerEntregadoPor(morfeo))
     }
 
-    test "un paquete no pago no puede ser entregado por Morfeo"{
+	//LISTO
+    test "un paquete no pago no puede ser entregado por Morfeo"
+	{	
+		morfeo.cantidadDinero(0)
+		paquete.pagar(false)
+		paquete.destino(matrix)
 	    assert.notThat(paquete.puedeSerEntregadoPor(morfeo))
     }
 
+	//LISTO
 	test "un paquete pago no puede entregado por Morfeo en camion de 3 acoplados"{
-		paquete.pagar()
+		morfeo.cantidadDinero(100)
+		paquete.pagar(true)
+		paquete.estaPago(morfeo)
         camion.acoplados(3)
+		morfeo.transporte(camion)
+		paquete.destino(puente)
 	    assert.notThat(paquete.puedeSerEntregadoPor(morfeo))
     }
-}
 
+	//LISTO
+	test "Que Neo con crédito no puede llevar un paquete que no está pago a la Matrix"{
+		neo.cantidadSaldo(200)
+		paquete.pagar(false)
+		paquete.estaPago(neo)
+		assert.notThat(paquete.puedeSerEntregadoPor(neo))
+	}
+}
 
 
 
