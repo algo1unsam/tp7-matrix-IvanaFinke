@@ -143,6 +143,18 @@ describe "Test de mensajeros primera parte " {
 		matrix.contratarUnEmpleado(morfeo)
 		assert.that(matrix.mensajeriaEsGrande())
 	}
+
+	test "Consultar si un paquete puede ser entregado por el primer empleado de la empresa."
+	{
+		matrix.contratarUnEmpleado(trinity)
+		matrix.contratarUnEmpleado(neo)
+		matrix.contratarUnEmpleado(morfeo)
+		paquete.estaPago(true)
+		paquete.pagar(true)
+		matrix.paqueteEntregadoPrimerEmpleado()
+		assert.that(matrix.paqueteEntregadoPrimerEmpleado())
+
+    }
 }
 
 
