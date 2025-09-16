@@ -2,7 +2,119 @@ import mensajeria.*
 import mensajeros.*
 
 
-describe "2 " {}
+describe "2 " {
+    //LISTO
+	test "Contratar a trinity"{
+		mensajeria.contratarUnEmpleado(trinity)
+		assert.equals([trinity], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Contratar a neo"{
+		mensajeria.contratarUnEmpleado(neo)
+		assert.equals([neo], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Contratar a todos"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		assert.equals([trinity,neo,morfeo], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Despedir a un mensajero"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.despedirUnEmpleado(trinity)
+		assert.equals([], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Despedir a todos"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		mensajeria.despedirATodos()
+		assert.equals([], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Mensajeria es grande si tiene mas de dos empleados"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		assert.that(mensajeria.mensajeriaEsGrande())
+	}
+
+    //LISTO
+	test "Consultar si un paquete puede ser entregado por el primer empleado de la empresa."
+	{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		paquete.estaPago(true)
+		paquete.pagar(true)
+		mensajeria.paqueteEntregadoPrimerEmpleado()
+		assert.that(mensajeria.paqueteEntregadoPrimerEmpleado())
+    }
+
+    //LISTO
+    test "peso del ultimo empleado contratado"{
+        mensajeria.contratarUnEmpleado(morfeo)
+        mensajeria.contratarUnEmpleado(trinity)
+        mensajeria.saberPeso()
+        assert.equals(900, mensajeria.saberPeso())
+    }
+
+    //LISTO
+    test "al menos un neo puede entregar el paquete"{
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+        neo.cantidadSaldo(100)
+        neo.cantidadDinero(100)
+        paqueton.pagar(neo)
+        mensajeria.almenosUnEmpleadoEntrega(paqueton)
+        assert.that(mensajeria.almenosUnEmpleadoEntrega(paqueton))
+    }
+
+    //LISTO
+    test "Obtener todos los mensajeros que pueden llevar un paquete dado"
+    {
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+        neo.cantidadSaldo(100)
+        neo.cantidadDinero(100)
+        trinity.cantidadDinero(100)
+        neo.cantidadDinero(100)
+        paqueton.pagar(neo)
+        paqueton.pagar(trinity)
+        assert.equals([trinity,neo],mensajeria.mensajeroPuedeLLevarPaquete(paqueton))
+    }
+
+    //LISTO
+    test "saber si una mensajeria tiene sobrepeso (sin transportes)"{
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(morfeo)
+        mensajeria.contratarUnEmpleado(neo)
+        assert.notThat(mensajeria.saberSiHaySobrepeso())
+    }
+
+    //LISTO
+    test "Hacer que la empresa envie un paquete"{
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(morfeo)
+        mensajeria.contratarUnEmpleado(neo)
+        morfeo.cantidadDinero(100)
+        paquete.pagar(true)
+
+        assert.that(mensajeria.eligeEmpleadoRepartir(paquete))
+    }
+
+
+}
 
 
 describe "3 " {}

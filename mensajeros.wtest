@@ -2,61 +2,104 @@ import mensajeros.*
 
 describe "Test de mensajeros primera parte " {
 	
-	test "Morfeo en camion con 1 acoplado pesa 90kg + 500kg "{
+	//LISTO
+	test "Morfeo en camion con 1 acoplado pesa 90kg + 500kg "
+	{
+		morfeo.transporte(camion)
+		morfeo.pesoConTransporte()
 	    assert.equals(590, morfeo.peso())
-}
+	}
 
-	test "Camion con 2 acoplados pesan 1000kg + 90kg"{
+	//LISTO
+	test "Camion con 2 acoplados pesan 1000kg + 90kg"
+	{
 		camion.acoplados(2)
+		morfeo.transporte(camion)
+		morfeo.pesoConTransporte()
 	    assert.equals(1090, morfeo.peso()) 
-}
+	}
 
-	test "monopatin pesa 1kg + "{
+	//LISTO
+	test "monopatin pesa 1kg + "
+	{
         morfeo.transporte(monopatin)
 	    assert.equals(1, monopatin.peso())
-}
+	}
 
-	test "Morfeo en monopatin pesa 90kg + 1kg "{
+	//LISTO
+	test "Morfeo en monopatin pesa 90kg + 1kg "
+	{
+		morfeo.peso(90)
 		morfeo.transporte(monopatin)
-	    assert.equals(91, morfeo.peso() )
-}
+	    assert.equals(91, morfeo.pesoConTransporte() )
+	}
 
-	test "Morfeo anda en el Nabucodonosor"{
+	//LISTO
+	test "Morfeo anda en el Nabucodonosor"
+	{
+		morfeo.transporte(camion)
 	    assert.equals(morfeo.transporte(), camion)
-}
+	}
 
-	test "el puente deja pasar un mensajero liviano"{
+	//LISTO
+	test "el puente deja pasar un mensajero liviano"
+	{	
+		morfeo.transporte(monopatin)
 	    assert.that(puente.dejarPasar(morfeo))
     }
 
+	//LISTO
     test "el puente no deja pasar un mensajero pesado"{
         camion.acoplados(3)
+		morfeo.transporte(camion)
+		morfeo.pesoConTransporte()
 	    assert.notThat(puente.dejarPasar(morfeo))
     }
 
+	//LISTO
     test "un paquete estaPago"{
-		paquete.pago(true)
-	    assert.that(paquete.estaPago())
+		morfeo.cantidadDinero(100)
+		paquete.pago(morfeo)
+	    assert.that(paquete.estaPago(morfeo))
     }
 
+	//LISTO
     test "un paquete pago con destino a Alsina puede ser entregado por Morfeo en camion liviano"{
-		paquete.pagar()
+		morfeo.cantidadDinero(100)
+		paquete.pagar(true)
+		camion.acoplados(1)
+		morfeo.transporte(camion)
 		paquete.destino(puente)
 	    assert.that(paquete.puedeSerEntregadoPor(morfeo))
     }
 
-    test "un paquete no pago no puede ser entregado por Morfeo"{
+	//LISTO
+    test "un paquete no pago no puede ser entregado por Morfeo"
+	{	
+		morfeo.cantidadDinero(0)
+		paquete.pagar(false)
+		paquete.destino(matrix)
 	    assert.notThat(paquete.puedeSerEntregadoPor(morfeo))
     }
 
+	//LISTO
 	test "un paquete pago no puede entregado por Morfeo en camion de 3 acoplados"{
-		paquete.pagar()
+		morfeo.cantidadDinero(100)
+		paquete.pagar(true)
+		paquete.estaPago(morfeo)
         camion.acoplados(3)
+		morfeo.transporte(camion)
+		morfeo.pesoConTransporte()
+		paquete.destino(puente)
 	    assert.notThat(paquete.puedeSerEntregadoPor(morfeo))
     }
+
+	//LISTO
+	test "Que Neo con crédito no puede llevar un paquete que no está pago a la Matrix"{
+		neo.cantidadSaldo(200)
+		paquete.pagar(false)
+		paquete.estaPago(neo)
+		assert.notThat(paquete.puedeSerEntregadoPor(neo))
+	}
+
 }
-
-
-
-
-
