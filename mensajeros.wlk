@@ -42,7 +42,31 @@ object neo
     method llamar() = cantidadSaldo > 0
 }
 
+//Mensajero Agregado Bedman:
+object bedman
+{
+    var property peso = 45
+    var property transporte = bedframe 
+    var property cantidadDinero = 0
+    var property teletransportacion = true
+
+    method pesoConTransporte()
+    {
+        const pesoConTransporte = self.peso() + transporte.peso()
+        self.peso(pesoConTransporte)
+        return pesoConTransporte
+    }
+
+    method llamar() = teletransportacion
+}
+
 //Medios de transporte:
+//Transporte agregado:
+object bedframe
+{
+    var property peso = 621
+}
+//Transportes originales:
 object vuelo {
     var property volar = "Volar" 
   
@@ -74,7 +98,7 @@ object  matrix
 {
     var llamada = false
 
-    method dejarPasar(usuario) = (usuario.llamar() == true)
+    method dejarPasar(usuario) = usuario.llamar()
 }
 
 //Paquete original:
@@ -131,7 +155,6 @@ object paqueton
     {   
         if(costoPagoPaquete <= usuario.cantidadDinero())
         {
-            costoPagoPaquete = 0
            self.pagado(true)
         }
         else
@@ -145,6 +168,31 @@ object paqueton
      method puedeSerEntregadoPor(usuario)
     {
         return pagado and (destino.all({lugar => lugar.dejarPasar(usuario)}))
+    }
+}
+
+//object Nuevo tipo de paquete
+object sobre
+{
+    var property costoPagoPaquete = 20
+    var property pagado = false
+    var property destino = matrix
+
+    method pagar(usuario)
+    {   
+        if(costoPagoPaquete <= usuario.cantidadDinero())
+        {
+           self.pagado(true)
+        }
+        else
+        {
+            costoPagoPaquete -= usuario.cantidadDinero()
+        }
+    }  
+
+      method puedeSerEntregadoPor(usuario)
+    {
+        return pagado and destino.dejarPasar(usuario)
     }
 }
 

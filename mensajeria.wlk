@@ -5,6 +5,7 @@ object mensajeria
     const property listaEmpleados = []
     const property paquetesPendientes = []
     var property enviado = false
+    var property facturado = 0
 
     method contratarUnEmpleado(empleado) = listaEmpleados.add(empleado)
 
@@ -22,9 +23,9 @@ object mensajeria
         return primerEmpleado
     }
 
-    method paqueteEntregadoPrimerEmpleado()
+    method paqueteEntregadoPrimerEmpleado(encomienda)
     {
-        return paquete.puedeSerEntregadoPor(self.retornaPrimerEmpleado())
+        return encomienda.puedeSerEntregadoPor(self.retornaPrimerEmpleado())
     }
 
 //Saber el peso del ultimo empleado contratado
@@ -59,10 +60,11 @@ object mensajeria
 //Hacer que la empresa envie un paquete
     method eligeEmpleadoRepartir(encomienda)
     {
-        const aux = listaEmpleados.find({empleado => encomienda.puedeSerEntregadoPor(empleado)})
-        if( aux != null)
+        const aux = listaEmpleados.any({empleado => encomienda.puedeSerEntregadoPor(empleado)})
+        if( aux == true)
         {
             enviado = true
+            self.facturado(self.facturado() + encomienda.costoPagoPaquete())
         }
         else
         {
@@ -71,6 +73,23 @@ object mensajeria
         return enviado
     }
 
+//Conocer la facturación de la empresa (el total
+// ganado por los paquetes enviados).
+    method facturacion() = facturado
   
-    
+//Dado un conjunto de paquetes, enviarlos a todos.
+    method enviarTodosLosPaquetes(paquetes)
+    {
+        paquetes.forEach({paquete => self.eligeEmpleadoRepartir(paquete)})
+        return paquetesPendientes.size() == 0
+    }
+
+//Encontrar el paquete pendiente más caro y enviarlo, 
+//actualizando los pendientes en caso de que se pueda enviar.
+    method pendienteMasCaro()
+    {
+        var encomienda = paquetesPendientes.max({paquete => paquete.costoPagoPaquete()})
+        self.eligeEmpleadoRepartir(encomienda)
+        paquetesPendientes.remove(encomienda)
+    }
 }
