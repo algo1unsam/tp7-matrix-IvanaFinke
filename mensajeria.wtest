@@ -2,7 +2,323 @@ import mensajeria.*
 import mensajeros.*
 
 
-describe "2 " {}
+describe "2 " {
+    //LISTO
+	test "Contratar a trinity"{
+		mensajeria.contratarUnEmpleado(trinity)
+		assert.equals([trinity], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Contratar a neo"{
+		mensajeria.contratarUnEmpleado(neo)
+		assert.equals([neo], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Contratar a todos"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		assert.equals([trinity,neo,morfeo], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Despedir a un mensajero"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.despedirUnEmpleado(trinity)
+		assert.equals([], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Despedir a todos"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		mensajeria.despedirATodos()
+		assert.equals([], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Mensajeria es grande si tiene mas de dos empleados"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		assert.that(mensajeria.mensajeriaEsGrande())
+	}
+
+    //LISTO
+	test "Consultar si un paquete puede ser entregado por el primer empleado de la empresa."
+	{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		paquete.estaPago(true)
+		paquete.pagar(true)
+		mensajeria.paqueteEntregadoPrimerEmpleado(paquete)
+		assert.that(mensajeria.paqueteEntregadoPrimerEmpleado(paquete))
+    }
+
+    //LISTO
+    test "peso del ultimo empleado contratado"{
+        mensajeria.contratarUnEmpleado(morfeo)
+        mensajeria.contratarUnEmpleado(trinity)
+        mensajeria.saberPeso()
+        assert.equals(900, mensajeria.saberPeso())
+    }
+
+    //LISTO
+    test "al menos neo puede entregar el paquete"{
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+        neo.cantidadSaldo(100)
+        neo.cantidadDinero(100)
+        paqueton.pagar(neo)
+        mensajeria.almenosUnEmpleadoEntrega(paqueton)
+        assert.that(mensajeria.almenosUnEmpleadoEntrega(paqueton))
+    }
+
+    //LISTO
+    test "Obtener todos los mensajeros que pueden llevar un paquete dado"
+    {
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+        neo.cantidadSaldo(100)
+        neo.cantidadDinero(100)
+        trinity.cantidadDinero(100)
+        neo.cantidadDinero(100)
+        paqueton.pagar(neo)
+        paqueton.pagar(trinity)
+        assert.equals([trinity,neo],mensajeria.mensajeroPuedeLLevarPaquete(paqueton))
+    }
+
+    //LISTO
+    test "saber si una mensajeria tiene sobrepeso (sin transportes)"{
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(morfeo)
+        mensajeria.contratarUnEmpleado(neo)
+        assert.notThat(mensajeria.saberSiHaySobrepeso())
+    }
+
+    //LISTO
+    test "Hacer que la empresa envie un paquete"{
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(morfeo)
+        mensajeria.contratarUnEmpleado(neo)
+        morfeo.cantidadDinero(100)
+        paquete.pagar(true)
+
+        assert.that(mensajeria.eligeEmpleadoRepartir(paquete))
+    }
+
+	//LISTO
+	test "conocer la facturación de la empresa"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(morfeo)
+		mensajeria.contratarUnEmpleado(neo)
+		morfeo.cantidadDinero(100)
+		trinity.cantidadDinero(100)
+		neo.cantidadDinero(100)
+		neo.cantidadDinero(100)
+		paquete.pagar(true)
+		paquetito.pagado()
+		paqueton.pagar(neo)
+		mensajeria.eligeEmpleadoRepartir(paquete)
+		mensajeria.eligeEmpleadoRepartir(paquetito)
+		mensajeria.eligeEmpleadoRepartir(paqueton)
+		assert.equals(150, mensajeria.facturacion())
+	}
+
+	//LISTO
+	test "dado un conjunto de paquetes, enviarlos a todos"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(morfeo)
+		mensajeria.contratarUnEmpleado(neo)
+		morfeo.cantidadDinero(100)
+		trinity.cantidadDinero(100)
+		neo.cantidadDinero(100)
+		neo.cantidadDinero(100)
+		paquete.pagar(true)
+		paquetito.pagado()
+		paqueton.pagar(neo)
+		var paquetes = [paquete, paquetito, paqueton]
+    	mensajeria.enviarTodosLosPaquetes(paquetes)
+		assert.equals(0, mensajeria.paquetesPendientes().size())
+	}
+
+	//LISTO
+	test "Encontrar el paquete pendiente más caro y enviarlo, actualizando los pendientes en caso de que se pueda enviar." {
+	  mensajeria.contratarUnEmpleado(trinity)
+	  mensajeria.eligeEmpleadoRepartir(paquete)
+	  mensajeria.eligeEmpleadoRepartir(paqueton)
+	  trinity.cantidadDinero(100)
+	  paqueton.pagar(trinity)
+	  mensajeria.pendienteMasCaro()
+	  assert.equals([paquete],mensajeria.paquetesPendientes())
+	}
 
 
-describe "3 " {}
+}
+
+
+describe "3 " {
+	//LISTO
+	test "Contratar a Bedman"{
+		mensajeria.contratarUnEmpleado(bedman)
+		assert.equals([bedman], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Contratar a todos"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		mensajeria.contratarUnEmpleado(bedman)
+		assert.equals([trinity,neo,morfeo,bedman], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Despedir a bedman"{
+		mensajeria.contratarUnEmpleado(bedman)
+		mensajeria.despedirUnEmpleado(bedman)
+		assert.equals([], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Despedir a todos"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		mensajeria.contratarUnEmpleado(bedman)
+		mensajeria.despedirATodos()
+		assert.equals([], mensajeria.listaEmpleados())
+	}
+
+	//LISTO
+	test "Mensajeria es grande si tiene mas de dos empleados"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(morfeo)
+		mensajeria.contratarUnEmpleado(bedman)
+		assert.that(mensajeria.mensajeriaEsGrande())
+	}
+
+	 //LISTO
+	test "Consultar si un paquete puede ser entregado por el primer empleado de la empresa."
+	{
+		mensajeria.contratarUnEmpleado(bedman)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+		bedman.cantidadDinero(100)
+		sobre.pagar(bedman)
+		mensajeria.paqueteEntregadoPrimerEmpleado(sobre)
+		assert.that(mensajeria.paqueteEntregadoPrimerEmpleado(sobre))
+    }
+
+	//LISTO
+    test "peso del ultimo empleado contratado"{
+        mensajeria.contratarUnEmpleado(morfeo)
+        mensajeria.contratarUnEmpleado(bedman)
+        mensajeria.saberPeso()
+        assert.equals(45, mensajeria.saberPeso())
+    }
+
+	//LISTO
+    test "al menos bedman puede entregar el paquete"{
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(bedman)
+		mensajeria.contratarUnEmpleado(morfeo)
+        bedman.cantidadDinero(100)
+        paqueton.pagar(bedman)
+        mensajeria.almenosUnEmpleadoEntrega(paqueton)
+        assert.that(mensajeria.almenosUnEmpleadoEntrega(paqueton))
+    }
+
+	//LISTO
+    test "Obtener todos los mensajeros que pueden llevar un paquete dado"
+    {
+        mensajeria.contratarUnEmpleado(bedman)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(morfeo)
+        neo.cantidadSaldo(100)
+        neo.cantidadDinero(100)
+        bedman.cantidadDinero(100)
+        neo.cantidadDinero(100)
+        paqueton.pagar(neo)
+        paqueton.pagar(bedman)
+        assert.equals([bedman,neo],mensajeria.mensajeroPuedeLLevarPaquete(paqueton))
+    }
+
+	//LISTO
+    test "saber si una mensajeria tiene sobrepeso (sin transportes)"{
+        mensajeria.contratarUnEmpleado(bedman)
+		mensajeria.contratarUnEmpleado(morfeo)
+        mensajeria.contratarUnEmpleado(neo)
+        assert.notThat(mensajeria.saberSiHaySobrepeso())
+    }
+
+	//LISTO
+    test "Hacer que la empresa envie un paquete"{
+        mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(bedman)
+        mensajeria.contratarUnEmpleado(neo)
+        bedman.cantidadDinero(100)
+        paquete.pagar(true)
+
+        assert.that(mensajeria.eligeEmpleadoRepartir(paquete))
+    }
+
+	//LISTO
+	test "conocer la facturación de la empresa"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(morfeo)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(bedman)
+		morfeo.cantidadDinero(100)
+		bedman.cantidadDinero(100)
+		trinity.cantidadDinero(100)
+		neo.cantidadDinero(100)
+		neo.cantidadDinero(100)
+		sobre.pagar(bedman)
+		paquete.pagar(true)
+		paquetito.pagado()
+		paqueton.pagar(neo)
+		mensajeria.eligeEmpleadoRepartir(paquete)
+		mensajeria.eligeEmpleadoRepartir(paquetito)
+		mensajeria.eligeEmpleadoRepartir(paqueton)
+		mensajeria.eligeEmpleadoRepartir(sobre)
+		assert.equals(170, mensajeria.facturacion())
+	}
+
+	//LISTO
+	test "dado un conjunto de paquetes, enviarlos a todos"{
+		mensajeria.contratarUnEmpleado(trinity)
+		mensajeria.contratarUnEmpleado(morfeo)
+		mensajeria.contratarUnEmpleado(neo)
+		mensajeria.contratarUnEmpleado(bedman)
+		morfeo.cantidadDinero(100)
+		trinity.cantidadDinero(100)
+		neo.cantidadDinero(100)
+		bedman.cantidadDinero(100)
+		sobre.pagar(bedman)
+		paquete.pagar(true)
+		paquetito.pagado()
+		paqueton.pagar(neo)
+		var paquetes = [paquete, paquetito, paqueton,sobre]
+    	mensajeria.enviarTodosLosPaquetes(paquetes)
+		assert.equals(0, mensajeria.paquetesPendientes().size())
+	}
+
+	//LISTO
+	test "Encontrar el paquete pendiente más caro y enviarlo, actualizando los pendientes en caso de que se pueda enviar." {
+	  mensajeria.contratarUnEmpleado(bedman)
+	  mensajeria.eligeEmpleadoRepartir(paquete)
+	  mensajeria.eligeEmpleadoRepartir(paqueton)
+	  mensajeria.eligeEmpleadoRepartir(sobre)
+	  bedman.cantidadDinero(100)
+	  paqueton.pagar(bedman)
+	  mensajeria.pendienteMasCaro()
+	  assert.equals([paquete,sobre],mensajeria.paquetesPendientes())
+	}
+}
