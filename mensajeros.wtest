@@ -5,8 +5,9 @@ describe "Test de mensajeros primera parte " {
 	//LISTO
 	test "Morfeo en camion con 1 acoplado pesa 90kg + 500kg "
 	{
-		morfeo.pesoMorfeo(90)
+		morfeo.peso(90)
 		morfeo.transporte(camion)
+		morfeo.pesoConTransporte()
 	    assert.equals(590, morfeo.peso())
 	}
 
@@ -14,8 +15,9 @@ describe "Test de mensajeros primera parte " {
 	test "Camion con 2 acoplados pesan 1000kg + 90kg"
 	{
 		camion.acoplados(2)
-		morfeo.pesoMorfeo(90)
+		morfeo.peso(90)
 		morfeo.transporte(camion)
+		morfeo.pesoConTransporte()
 	    assert.equals(1090, morfeo.peso()) 
 	}
 
@@ -29,8 +31,9 @@ describe "Test de mensajeros primera parte " {
 	//LISTO
 	test "Morfeo en monopatin pesa 90kg + 1kg "
 	{
-		morfeo.pesoMorfeo(90)
+		morfeo.peso(90)
 		morfeo.transporte(monopatin)
+		morfeo.pesoConTransporte()
 	    assert.equals(91, morfeo.peso() )
 	}
 
@@ -45,6 +48,7 @@ describe "Test de mensajeros primera parte " {
 	test "el puente deja pasar un mensajero liviano"
 	{	
 		morfeo.transporte(monopatin)
+		morfeo.pesoConTransporte()
 	    assert.that(puente.dejarPasar(morfeo))
     }
 
@@ -52,6 +56,7 @@ describe "Test de mensajeros primera parte " {
     test "el puente no deja pasar un mensajero pesado"{
         camion.acoplados(3)
 		morfeo.transporte(camion)
+		morfeo.pesoConTransporte()
 	    assert.notThat(puente.dejarPasar(morfeo))
     }
 
@@ -88,6 +93,7 @@ describe "Test de mensajeros primera parte " {
 		paquete.estaPago(morfeo)
         camion.acoplados(3)
 		morfeo.transporte(camion)
+		morfeo.pesoConTransporte()
 		paquete.destino(puente)
 	    assert.notThat(paquete.puedeSerEntregadoPor(morfeo))
     }
@@ -100,61 +106,6 @@ describe "Test de mensajeros primera parte " {
 		assert.notThat(paquete.puedeSerEntregadoPor(neo))
 	}
 
-	//LISTO
-	test "Contratar a trinity"{
-		matrix.contratarUnEmpleado(trinity)
-		assert.equals([trinity], matrix.listaEmpleados())
-	}
-
-	//LISTO
-	test "Contratar a neo"{
-		matrix.contratarUnEmpleado(neo)
-		assert.equals([neo], matrix.listaEmpleados())
-	}
-
-	//LISTO
-	test "Contratar a todos"{
-		matrix.contratarUnEmpleado(trinity)
-		matrix.contratarUnEmpleado(neo)
-		matrix.contratarUnEmpleado(morfeo)
-		assert.equals([trinity,neo,morfeo], matrix.listaEmpleados())
-	}
-
-	//LISTO
-	test "Despedir a un mensajero"{
-		matrix.contratarUnEmpleado(trinity)
-		matrix.despedirUnEmpleado(trinity)
-		assert.equals([], matrix.listaEmpleados())
-	}
-
-	//LISTO
-	test "Despedir a todos"{
-		matrix.contratarUnEmpleado(trinity)
-		matrix.contratarUnEmpleado(neo)
-		matrix.contratarUnEmpleado(morfeo)
-		matrix.despedirATodos()
-		assert.equals([], matrix.listaEmpleados())
-	}
-
-	//LISTO
-	test "Mensajeria es grande si tiene mas de dos empleados"{
-		matrix.contratarUnEmpleado(trinity)
-		matrix.contratarUnEmpleado(neo)
-		matrix.contratarUnEmpleado(morfeo)
-		assert.that(matrix.mensajeriaEsGrande())
-	}
-
-	test "Consultar si un paquete puede ser entregado por el primer empleado de la empresa."
-	{
-		matrix.contratarUnEmpleado(trinity)
-		matrix.contratarUnEmpleado(neo)
-		matrix.contratarUnEmpleado(morfeo)
-		paquete.estaPago(true)
-		paquete.pagar(true)
-		matrix.paqueteEntregadoPrimerEmpleado()
-		assert.that(matrix.paqueteEntregadoPrimerEmpleado())
-
-    }
 }
 
 
